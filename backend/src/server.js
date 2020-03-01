@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const routes = require('./routes');
 
@@ -11,8 +12,10 @@ mongoose.connect('mongodb+srv://omnistack:omnistack@icfn-mpexq.mongodb.net/omnis
     useUnifiedTopology: true
 });
 
-server.use(express.json());
+server.use(cors()); // possibilita conexões de qualquer endereço
 
-server.use(routes);
+server.use(express.json()); // indica que todas as requisições e respostas serão em Json
+
+server.use(routes); // Configuração de rotas do serviço
 
 server.listen(3333);//Determina a porta que o serviço estará disponível

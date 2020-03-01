@@ -3,6 +3,20 @@ const Dev = require('../models/Dev');
 
 
 module.exports = {
+    async index(req, resp) {
+        const { user } = req.headers;
+        const loggedDev = await Dev.findById(user);
+        const users = await Dev.find({
+            $and:  [
+                { _id: {$ne: user} },
+                { _id: {$nin: loggedDev.likes} },
+                { _id: {$nin: loggedDev.dislikes} },
+            ],
+        })
+
+        return resp.json(users);
+    },
+
     async store(req, resp) {
         const { username } = req.body;
 
@@ -25,4 +39,5 @@ module.exports = {
 
         resp.json(dev);
     } 
+
 };
