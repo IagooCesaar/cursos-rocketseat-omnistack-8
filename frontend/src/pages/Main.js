@@ -14,6 +14,7 @@ export default function Main({ match }) {
     //e o segundo é quando eu quero que a função seja executada
     useEffect(() => { // não é recomendado colocar async direto nessa primeira função, por isso criada a segunda
         async function loadUser() {
+            //Função que desejo executar
             const response = await api.get('/devs',{
                 headers: {
                     user: match.params.id,
@@ -23,7 +24,8 @@ export default function Main({ match }) {
         };
         loadUser();
     }, [
-        match.params.id // toda vez q o ID for alterado a função será executada
+        //Gatilho para execução da função -> toda vez que a variável for alterada
+        match.params.id 
     ]);
 
     async function handleLike(id) {
@@ -51,7 +53,7 @@ export default function Main({ match }) {
         <div className="main-container">
             <Link to="/">
                 <img src={logo} alt="Tindev" />
-            </Link>
+            </Link>            
             { users.length > 0 ? (
                 <ul>
                     {users.map(user => (
