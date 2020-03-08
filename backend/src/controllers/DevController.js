@@ -5,6 +5,7 @@ const Dev = require('../models/Dev');
 module.exports = {
     async index(req, resp) {
         const { user } = req.headers;
+        console.log('Retornando devs para o usuário '+user);
         const loggedDev = await Dev.findById(user);
         const users = await Dev.find({
             $and:  [
@@ -18,7 +19,9 @@ module.exports = {
     },
 
     async store(req, resp) {
+        
         const { username } = req.body;
+        console.log('Cadsatrando e retornando dados do dev: '+username);
 
         const userExists = await Dev.findOne({
             user: username

@@ -32,6 +32,8 @@ export default function Login({ navigation }){
         [] //somente uma unica vez
     )
     async function handleLogin() {
+        console.log('tentativa de login de '+user);
+        
         const response = await api.post('/devs',{
             username: user
         });
@@ -39,7 +41,7 @@ export default function Login({ navigation }){
 
         await AsyncStorage.setItem('user', _id);
 
-        navigation.navigate('Main', {_id });
+        navigation.navigate('Main', {user: _id });
 
         console.log(response.data);
 
