@@ -21,7 +21,7 @@ module.exports = {
     async store(req, resp) {
         
         const { username } = req.body;
-        console.log('Cadsatrando e retornando dados do dev: '+username);
+        console.log('Cadastrando e retornando dados do dev: '+username);
 
         const userExists = await Dev.findOne({
             user: username
