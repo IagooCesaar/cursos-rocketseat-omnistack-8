@@ -10,23 +10,26 @@ const app = express();
 const server = require('http').Server(app);
 const io     = require('socket.io')(server);
 
+const connectedUsers = {};
+
 io.on('connection', socket => {
-    console.log('Nova conexão',socket.id)
-    socket.on('hello', message => {
-        console.log('Mensagem recebida do frontend:',message)
-    });
-    
-    setTimeout(() => {
-        socket.emit('world', {
-            message: 'OmniStack'
-        });
-    }, 5000);
+    const { user } = socket.handshake.query;
+    connectedUsers[user] = socket.id;
+    console.log('Novo vinculo socket de usuário', user, socket.id);
 });
 
 mongoose.connect('mongodb+srv://omnistack:omnistack@icfn-mpexq.mongodb.net/omnistack8?retryWrites=true&w=majority',{
     useNewUrlParser: true    ,
     useUnifiedTopology: true
 });
+
+// Middleware
+app.use((req, resp, next) => {
+    req.io = io;
+    req.connectedUsers = connectedUsers;
+
+    return next();
+})
 
 app.use(cors()); // possibilita conexões de qualquer endereço
 

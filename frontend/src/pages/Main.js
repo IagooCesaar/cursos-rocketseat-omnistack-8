@@ -30,16 +30,12 @@ export default function Main({ match }) {
     ]);
 
     useEffect(() => {
-        const socket = io('http://localhost:3333');
-        setTimeout(() => {
-            socket.emit('hello', {
-                message: 'Hello World'
-            })
-        }, 3000);
-
-        socket.on('world', message => {
-            console.log('Mensagem recebida do servidor', message)
-        })
+        const socket = io('http://localhost:3333', {
+            query: {
+                user: match.params.id
+            }     
+        });
+        
     },
         [match.params.id]
     );
