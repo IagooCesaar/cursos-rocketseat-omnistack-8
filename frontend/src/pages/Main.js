@@ -6,11 +6,14 @@ import'./Main.css';
 import logo from '../assets/logo.svg';
 import like from '../assets/like.svg';
 import dislike from '../assets/dislike.svg';
+import itsamatch from '../assets/itsamatch.png';
 
 import api from '../services/api';
 
 export default function Main({ match }) {
     const [users, setUsers] = useState([]);
+    const [matchDev, setMatchDev] = useState(null);
+
     // useEffect(() => {}, []) recebe dois parâmetros: a função que quero executar
     //e o segundo é quando eu quero que a função seja executada
     useEffect(() => { // não é recomendado colocar async direto nessa primeira função, por isso criada a segunda
@@ -35,7 +38,10 @@ export default function Main({ match }) {
                 user: match.params.id
             }     
         });
-        
+        socket.on('match', dev => {
+            console.log('Match registrado com ',dev);
+            setMatchDev(dev);
+        })        
     },
         [match.params.id]
     );
@@ -89,6 +95,15 @@ export default function Main({ match }) {
             ) : (
                 <div className="empty">
                     Acabou :(
+                </div>
+            )}
+            { matchDev && (
+                <div className="match-container">
+                    <img className="logo-match" src={itsamatch} alt="Its a Match" />
+                    <img className="avatar" src={matchDev.avatar} alt={matchDev.name} />
+                    <strong>{matchDev.name}</strong>
+                    <p>{matchDev.bio}</p>
+                    <button type="button" onClick={() => {setMatchDev(null)}}>Thanks!</button>
                 </div>
             )}
         </div>
