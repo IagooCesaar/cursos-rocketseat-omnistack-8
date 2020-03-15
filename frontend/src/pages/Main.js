@@ -32,7 +32,7 @@ export default function Main({ match }) {
         match.params.id 
     ]);
 
-    useEffect(() => {
+    useEffect(() => { // conexão do frontend
         const socket = io('http://localhost:3333', {
             query: {
                 user: match.params.id,
@@ -104,7 +104,7 @@ export default function Main({ match }) {
                     <img className="avatar" src={matchDev.avatar} alt={matchDev.name} />
                     <strong>{matchDev.name}</strong>
                     <p>{matchDev.bio}</p>
-                    <button type="button" onClick={() => {setMatchDev(null)}}>Thanks!</button>
+                    <button type="button" onClick={() => {setMatchDev(null)}}>FECHAR</button>
                 </div>
             )}
         </div>

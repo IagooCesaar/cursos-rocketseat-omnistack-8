@@ -6,7 +6,7 @@ const cors     = require('cors');
 const routes = require('./routes');
 
 // Express é uma função que quando chamada cria um novo serviço 
-const app = express();
+const app    = express();
 const server = require('http').Server(app);
 const io     = require('socket.io')(server);
 
@@ -16,7 +16,7 @@ io.on('connection', socket => {
     const { user, app } = socket.handshake.query;
 
     connectedUsers[user] = socket.id;
-    console.log('Novo vinculo socket de usuário', user, socket.id, 'no app '+app);
+    console.log('Novo vinculo socket de usuário', user, socket.id, 'no app ', app);
 });
 
 mongoose.connect('mongodb+srv://omnistack:omnistack@icfn-mpexq.mongodb.net/omnistack8?retryWrites=true&w=majority',{
