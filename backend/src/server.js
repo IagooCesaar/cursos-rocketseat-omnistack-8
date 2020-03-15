@@ -13,9 +13,10 @@ const io     = require('socket.io')(server);
 const connectedUsers = {};
 
 io.on('connection', socket => {
-    const { user } = socket.handshake.query;
+    const { user, app } = socket.handshake.query;
+
     connectedUsers[user] = socket.id;
-    console.log('Novo vinculo socket de usuário', user, socket.id);
+    console.log('Novo vinculo socket de usuário', user, socket.id, 'no app '+app);
 });
 
 mongoose.connect('mongodb+srv://omnistack:omnistack@icfn-mpexq.mongodb.net/omnistack8?retryWrites=true&w=majority',{

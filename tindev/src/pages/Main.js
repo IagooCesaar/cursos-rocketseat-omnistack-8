@@ -7,12 +7,14 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native';
+import io from 'socket.io-client';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Logo from '../assets/logo.png';
 import Like from '../assets/like.png';
 import Dislike from '../assets/dislike.png';
+import itsamatch from '../assets/itsamatch.png';
 
 import api from '../services/Api';
 
@@ -20,6 +22,7 @@ export default function Main({ navigation }) {
     const userId = navigation.getParam('user');
 
     const [users, setUsers] = useState([]);
+    const [matchDev, setMatchDev] = useState(null);
     // useEffect(() => {}, []) recebe dois parâmetros: a função que quero executar
     //e o segundo é quando eu quero que a função seja executada
     useEffect(() => { // não é recomendado colocar async direto nessa primeira função, por isso criada a segunda
@@ -39,6 +42,22 @@ export default function Main({ navigation }) {
         //Gatilho para execução da função -> toda vez que a variável for alterada
         userId 
     ]);
+
+    useEffect(() => {
+        console.log('Estabelecendo conexão Socket. Usuario '+userId)
+        const socket = io('http://192.168.100.100:3333', {
+            query: {
+                user: userId,
+                app: 'tindev'
+            }     
+        });
+        socket.on('match', dev => {
+            console.log('Match registrado com ',dev);
+            setMatchDev(dev);
+        })        
+    },
+        [userId]
+    );
 
     async function handleLike() {
         const [user, ...rest] = users;//Coloca 1º elemento do array em user e restantes em rest
@@ -108,6 +127,21 @@ export default function Main({ navigation }) {
                     </TouchableOpacity>
                 </View>
             )}
+
+            {
+                matchDev && ( 
+                    <View style={styles.matchContainer}>
+                        <Image style={styles.matchLogo} source={itsamatch} />
+                        <Image style={styles.matchAvatar} source={{uri: matchDev.avatar}} />
+                        <Text style={styles.matchName}>{matchDev.name}</Text>
+                <Text style={styles.matchBio}>{matchDev.bio}</Text>
+
+                        <TouchableOpacity onPress={() => setMatchDev(null) }>
+                            <Text style={styles.closeMatch}>Thanks!</Text>
+                        </TouchableOpacity>
+                    </View>
+                )
+            }
             
         </SafeAreaView>
     )
@@ -198,5 +232,44 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         }
+    },
+
+    matchContainer: {
+        ... StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0, 0.8)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }, 
+    matchLogo: {
+        height: 60,
+        resizeMode: 'contain',
+    },
+    matchAvatar: {
+        width: 160,
+        height: 160,
+        borderRadius: 80,
+        borderWidth: 6,
+        borderColor: '#FFF',
+        marginVertical: 30,
+    },
+    matchName: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#FFF',
+    },
+    matchBio: {
+        marginTop: 10,        
+        fontSize: 16,
+        color: 'rgba(255, 255, 255, 0.8)',
+        lineHeight: 24,
+        textAlign: 'center',
+        paddingHorizontal: 30,
+    },
+    closeMatch: {
+        fontSize: 16,
+        color: 'rgba(255, 255, 255, 0.8)',
+        textAlign: 'center',
+        marginTop: 30,
+        fontWeight: 'bold'
     },
 })
